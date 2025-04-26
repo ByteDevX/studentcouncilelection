@@ -262,11 +262,11 @@
         @if (env('APP_ENV') !== 'production')
     <div class="floating-warning">
         <p>
-            <strong>Notice:</strong>strong> This website is currently operating in a <strong>testing environment</strong> and is not intended for <strong>production use</strong>.
+            <strong>Notice:</strong> This website is currently operating in a <strong>testing environment</strong> and is not intended for <strong>production use</strong>.
         </p>
         <hr style="border: 1px solid white; opacity: 0.5;">
         <p>
-            <strong>Pemberitahuan:</strong>strong> Situs web ini saat ini beroperasi dalam <strong>lingkungan pengujian</strong> dan tidak diperuntukkan untuk <strong>penggunaan produksi</strong>.
+            <strong>Pemberitahuan:</strong> Situs web ini saat ini beroperasi dalam <strong>lingkungan pengujian</strong> dan tidak diperuntukkan untuk <strong>penggunaan produksi</strong>.
         </p>
     </div>
 @endif
