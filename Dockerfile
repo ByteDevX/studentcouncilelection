@@ -28,10 +28,19 @@ RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoload
 ########################
 FROM node:20 AS frontend
 WORKDIR /app
+
+# 1️⃣ install deps
 COPY package.json package-lock.json ./
 RUN npm ci --quiet
-COPY resources resources
+
+# 2️⃣ copy ONLY what the asset build needs
+COPY vite.config.js .                      # vite config
+COPY resources resources                   # source JS/CSS
+COPY public/ public/                      # if you keep assets here
+# (optional) COPY resources/views resources/views  # if your config uses Blade as input
+
 RUN npm run build
+
 
 ########################
 # 3. Runtime image     #
