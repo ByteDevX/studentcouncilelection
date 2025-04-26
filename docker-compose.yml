@@ -33,7 +33,6 @@ services:
     restart: always
     container_name: sce-web
     volumes:
-      - .:/var/www:ro
       - storage:/var/www/storage          # same uploads
     expose:
       - "80"                              # HTTP for NPM
