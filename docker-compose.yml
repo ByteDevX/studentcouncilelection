@@ -43,7 +43,7 @@ services:
 
     # Expose PHP-FPM for the proxy (ONLY on the internal networks)
     expose:
-      - "9000"
+      - 9000
 
 volumes:
   storage:
