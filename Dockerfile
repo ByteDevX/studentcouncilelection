@@ -34,9 +34,9 @@ COPY package.json package-lock.json ./
 RUN npm ci --quiet
 
 # 2️⃣ copy ONLY what the asset build needs
-COPY vite.config.js .                      # vite config
-COPY resources resources                   # source JS/CSS
-COPY public/ public/                      # if you keep assets here
+COPY vite.config.js . 
+COPY resources resources
+COPY public/ public/
 # (optional) COPY resources/views resources/views  # if your config uses Blade as input
 
 RUN npm run build
