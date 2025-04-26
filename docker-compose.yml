@@ -19,7 +19,7 @@ services:
       DB_USERNAME:       ${DB_USERNAME:-studentcouncilelection}
       DB_PASSWORD:       ${DB_PASSWORD:-ACCESS!def00}
     volumes:
-      - /srv/webhost/studentcouncilelection/www:/var/www/
+      - drive:/var/www/
     networks:
       - sce-net
     expose:
@@ -33,13 +33,16 @@ services:
     restart: always
     container_name: sce-web
     volumes:
-      - /srv/webhost/studentcouncilelection/www:/var/www/          # same uploads
+      - drive:/var/www/
     expose:
       - "80"                              # HTTP for NPM
 
     networks:
       - sce-net                           # to reach sce:9000
       - link0                             # external network NPM uses
+
+volumes:
+  drive:
 
 networks:
   sce-net:
