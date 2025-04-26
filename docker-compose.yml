@@ -3,8 +3,6 @@ services:
     build: .
     ports:
       - "50002:50002"
-    volumes:
-      - /srv/webhost/studentcouncilelection/www:/var/www
     networks:
       - link0
     container_name: sce
