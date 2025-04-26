@@ -67,6 +67,8 @@ RUN apk add --no-cache \
         icu libzip \
         libpng libjpeg-turbo freetype libwebp
 
+COPY --from=composer:2.8 /usr/bin/composer /usr/local/bin/composer
+
 WORKDIR /var/www
 COPY --from=vendor /app/vendor vendor
 COPY --from=frontend /app/public/build public/build
