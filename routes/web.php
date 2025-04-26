@@ -52,3 +52,7 @@ Route::get('/finish', function () {
 Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
+});
