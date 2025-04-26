@@ -259,14 +259,16 @@
 </head>
 <body>
     <div class = "w-100 bg-image px-5">
-        @if (env('APP_ENV') !== 'production')
+        @if (env('APP_ENV') !== 'production' && env('DB_DATABASE') !== 'sce.prod')
     <div class="floating-warning">
         <p>
-            <strong>Notice:</strong> This website is currently operating in a <strong>testing environment</strong> and is not intended for <strong>production use</strong>.
+            <strong>Notice:</strong> This website is currently operating in a <strong>testing environment</strong> and is not intended for <strong>production use</strong>. 
+        </br>If you believe this configuration is incorrect, please contact your <strong>system administrator</strong> or <strong>hosting provider</strong> immediately.
         </p>
         <hr style="border: 1px solid white; opacity: 0.5;">
         <p>
-            <strong>Pemberitahuan:</strong> Situs web ini saat ini beroperasi dalam <strong>lingkungan pengujian</strong> dan tidak diperuntukkan untuk <strong>penggunaan produksi</strong>.
+            <strong>Pemberitahuan:</strong> Situs web ini saat ini beroperasi dalam <strong>lingkungan pengujian</strong> dan tidak diperuntukkan untuk <strong>penggunaan produksi</strong>. 
+            </br>Jika Anda yakin konfigurasi ini tidak benar, harap segera hubungi <strong>administrator sistem</strong> atau <strong>penyedia hosting</strong> Anda.
         </p>
     </div>
 @endif
