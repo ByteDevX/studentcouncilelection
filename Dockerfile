@@ -51,7 +51,7 @@ FROM php:8.3-fpm-alpine AS runtime
 RUN set -eux; \
     apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
-        icu-dev icu-data-full \        # ←  add BOTH for intl
+        icu-dev icu-data-full \
         libzip-dev \
         libpng-dev libjpeg-turbo-dev freetype-dev libwebp-dev && \
 # ---------------------------- compile extensions --------------------------
