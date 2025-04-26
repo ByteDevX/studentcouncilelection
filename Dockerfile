@@ -21,8 +21,9 @@ COPY --link --from=composer:2.8 /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
-
+RUN composer install --no-dev --prefer-dist --no-interaction \
+        --optimize-autoloader --no-scripts
+        
 ########################
 # 2. Front-end assets  #
 ########################
@@ -67,8 +68,10 @@ RUN apk add --no-cache \
         libpng libjpeg-turbo freetype libwebp
 
 WORKDIR /var/www
-COPY --from=vendor   /app            ./
+COPY --from=vendor /app/vendor vendor
 COPY --from=frontend /app/public/build public/build
+COPY . .
+RUN composer run-script post-autoload-dump --no-dev --no-interaction
 RUN chown -R www-data:www-data storage bootstrap/cache
 
 USER www-data
