@@ -1,36 +1,17 @@
 services:
-  php-fpm:
-    # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
+  app:
     build:
-      context: .
-      dockerfile: ./docker/php-fpm/Dockerfile
-    restart: unless-stopped
+      args:
+        user: 1002
+        uid: 1002
+      context: ./
+      dockerfile: Dockerfile
+    image: sce
+    container_name: sce
+    restart: always
+    working_dir: /var/www/
     volumes:
-      - /srv/webhost/studentcouncilelection/www/storage:/var/www/storage # Mount the storage volume
-    env_file:
-      - stack.env
-    networks:
-      - link0
-    healthcheck:
-      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    
-
-  # The 'php-cli' service provides a command-line interface for running Artisan commands and other CLI tasks.
-  # -----------------------------------------------------------
-  # This is useful for running migrations, seeders, or any custom scripts.
-  # It shares the same codebase and environment as the 'php-fpm' service.
-  # -----------------------------------------------------------
-  php-cli:
-    build:
-      context: .
-      dockerfile: ./docker/php-cli/Dockerfile
-    tty: true # Enables an interactive terminal
-    stdin_open: true # Keeps standard input open for 'docker exec'
-    env_file:
-      - stack.env
+      - /srv/webhost/studentcouncilelection/www/:/var/www
     networks:
       - link0
 
