@@ -45,16 +45,15 @@ services:
     expose:
       - "9000"
 
+    
   sce-web:
-    image: nginx:1.26-alpine
+    build: ./nginx
     depends_on:
       - sce-app
     restart: always
     container_name: sce-web
 
     volumes:
-      - ./nginx/:/etc/nginx/conf.d/
-      - .:/var/www                     # code + /public
       - storage:/var/www/storage          # same uploads
 
     expose:
