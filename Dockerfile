@@ -1,12 +1,26 @@
 # syntax=docker/dockerfile:1
 
 ########################
-# 1. Vendors (Composer) #
+# 1. Vendors + GD      #
 ########################
-FROM composer:2.8 AS vendor
+FROM php:8.3-cli-alpine AS vendor
+
+# ---- system libs needed for GD ----
+RUN apk add --no-cache \
+      libpng-dev libjpeg-turbo-dev freetype-dev libwebp-dev \
+      icu-dev libzip-dev zlib-dev git curl
+
+# ---- PHP extensions ----
+RUN docker-php-ext-configure gd \
+        --with-freetype --with-jpeg --with-webp \
+ && docker-php-ext-install -j$(nproc) gd intl zip opcache
+
+# ---- Composer (already included in official php images) ----
+ENV COMPOSER_HOME=/tmp/composer
+COPY --link --from=composer:2.8 /usr/bin/composer /usr/local/bin/composer
+
 WORKDIR /app
 COPY composer.json composer.lock ./
-ENV COMPOSER_MEMORY_LIMIT=-1
 RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
 
 ########################
@@ -17,15 +31,19 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --quiet
 COPY resources resources
-RUN npm run build      # vite → /app/public/build
+RUN npm run build
 
 ########################
 # 3. Runtime image     #
 ########################
 FROM php:8.3-fpm-alpine AS runtime
 
-RUN apk add --no-cache icu-dev libzip-dev zlib-dev git curl \
- && docker-php-ext-install pdo pdo_mysql intl zip opcache
+RUN apk add --no-cache \
+      libpng libjpeg-turbo freetype libwebp icu libzip zlib \
+      libpng-dev libjpeg-turbo-dev freetype-dev libwebp-dev
+RUN docker-php-ext-configure gd \
+        --with-freetype --with-jpeg --with-webp \
+ && docker-php-ext-install -j$(nproc) gd intl zip pdo pdo_mysql opcache
 
 WORKDIR /var/www
 COPY --from=vendor   /app            ./
