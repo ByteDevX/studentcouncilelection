@@ -8,15 +8,19 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     zip \
     git \
+    curl \
+    php-cli \
+    unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_mysql
 
 # Enable Apache mod_rewrite for Laravel routing
 RUN a2enmod rewrite
 
-# Install Node.js and npm
-RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
-    && apt-get install -y nodejs
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer -o /tmp/composer-installer.php && \
+    php /tmp/composer-installer.php --install-dir=/usr/local/bin --filename=composer && \
+    chmod +x /usr/local/bin/composer
 
 # Set the working directory to /var/www/html
 WORKDIR /var/www/html
@@ -24,9 +28,8 @@ WORKDIR /var/www/html
 # Copy the Laravel app files into the container
 COPY . /var/www/html
 
-# Install Composer and Laravel dependencies
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && composer install --no-dev --optimize-autoloader
+# Install Laravel dependencies using Composer
+RUN composer install --no-dev --optimize-autoloader
 
 # Install NPM dependencies and build assets
 RUN npm install \
