@@ -1,21 +1,19 @@
 services:
   sce:
-    build: .
+    build:
+      args:
+        user: webhost
+        uid: 1002
+      context: ./
+      dockerfile: Dockerfile
+    image: sce
     container_name: sce
-    ports:
-      - "50002:80"
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - /srv/webhost/studentcouncilelection/www/:/var/www
     networks:
       - link0
-    environment:
-      - APP_ENV=production
-      - APP_DEBUG=false
-      - APP_URL=https://sce.kevinchr.com
-      - DB_CONNECTION=mysql
-      - DB_HOST=db2.kevinchr.com
-      - DB_PORT=3306
-      - DB_DATABASE=studentcouncilelection
-      - DB_USERNAME=studentcouncilelection
-      - DB_PASSWORD=ACCESS!def00
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:50002/health"]
       interval: 10s
