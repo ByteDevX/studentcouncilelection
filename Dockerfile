@@ -1,44 +1,42 @@
-FROM php:8.4-cli
+# Use an official PHP image with Apache
+FROM php:8.4-apache
 
-# Install system dependencies
+# Install required PHP extensions and dependencies for Laravel
 RUN apt-get update && apt-get install -y \
-    git unzip curl libzip-dev libpng-dev libonig-dev libxml2-dev \
-    gnupg
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    zip \
+    git \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd pdo pdo_mysql
 
-# Install Node.js versi 22
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
-    apt-get install -y nodejs
+# Enable Apache mod_rewrite for Laravel routing
+RUN a2enmod rewrite
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath
+# Install Node.js and npm
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Set the working directory to /var/www/html
+WORKDIR /var/www/html
 
-# Set working directory
-WORKDIR /var/www
+# Copy the Laravel app files into the container
+COPY . /var/www/html
 
-# Copy Laravel project files
-COPY . .
+# Install Composer and Laravel dependencies
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && composer install --no-dev --optimize-autoloader
 
-# Install PHP dependencies
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+# Install NPM dependencies and build assets
+RUN npm install \
+    && npm run prod
 
-# Install JS dependencies and build assets
-RUN npm install && npm run build
+# Set the correct file permissions for Laravel's storage and bootstrap/cache directories
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Generate application key
-RUN php artisan key:generate
+# Expose port 80 for the Apache server
+EXPOSE 80
 
-# Fresh migrate database and seed
-RUN php artisan migrate:fresh --seed || true
-# pakai `|| true` biar kalau database belum ready saat build, tidak error. Migrasi ulang di CMD.
-
-# Set permissions
-RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
-
-# Expose port
-EXPOSE 50002
-
-# Start server + database migrate + seeder di runtime
-CMD php artisan serve --host=0.0.0.0 --port=50002
+# Set the default command to run Apache in the foreground
+CMD ["apache2-foreground"]
