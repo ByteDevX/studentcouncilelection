@@ -47,12 +47,24 @@ RUN npm run build
 ########################
 FROM php:8.3-fpm-alpine AS runtime
 
+# ---------------------------- build-time deps -----------------------------
+RUN set -eux; \
+    apk add --no-cache --virtual .build-deps \
+        $PHPIZE_DEPS \
+        icu-dev icu-data-full \        # ←  add BOTH for intl
+        libzip-dev \
+        libpng-dev libjpeg-turbo-dev freetype-dev libwebp-dev && \
+# ---------------------------- compile extensions --------------------------
+    docker-php-ext-configure gd \
+        --with-freetype --with-jpeg --with-webp && \
+    docker-php-ext-install -j"$(nproc)" gd intl zip pdo pdo_mysql opcache && \
+# ---------------------------- strip build deps ----------------------------
+    apk del .build-deps
+
+# ----- runtime libs only (tiny image) -----
 RUN apk add --no-cache \
-      libpng libjpeg-turbo freetype libwebp icu libzip zlib \
-      libpng-dev libjpeg-turbo-dev freetype-dev libwebp-dev
-RUN docker-php-ext-configure gd \
-        --with-freetype --with-jpeg --with-webp \
- && docker-php-ext-install -j$(nproc) gd intl zip pdo pdo_mysql opcache
+        icu libzip \
+        libpng libjpeg-turbo freetype libwebp
 
 WORKDIR /var/www
 COPY --from=vendor   /app            ./
