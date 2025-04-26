@@ -1,12 +1,21 @@
 services:
   sce:
     build: .
+    container_name: sce
     ports:
-      - "50002:50002"
+      - "50002:80"
     networks:
       - link0
-    container_name: sce
-    restart: always
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=https://sce.kevinchr.com
+      - DB_CONNECTION=mysql
+      - DB_HOST=db2.kevinchr.com
+      - DB_PORT=3306
+      - DB_DATABASE=your_database_name
+      - DB_USERNAME=your_database_user
+      - DB_PASSWORD=your_database_password
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:50002/health"]
       interval: 10s
