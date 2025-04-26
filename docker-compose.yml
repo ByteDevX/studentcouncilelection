@@ -1,5 +1,5 @@
 services:
-  laravel-app:
+  sce:
     build: .
     ports:
       - "50002:50002"
@@ -7,6 +7,8 @@ services:
       - /srv/webhost/studentcouncilelection/www:/var/www
     networks:
       - link0
+    container_name: sce
+    restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:50002/health"]
       interval: 10s
