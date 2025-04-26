@@ -1,5 +1,5 @@
 services:
-  sce:
+  sce-app:
     # Build from the Dockerfile above (Portainer will run `docker build`)
     build:
       context: .
@@ -30,6 +30,7 @@ services:
     # Persist user uploads, logs, etc.
     volumes:
       - storage:/var/www/storage
+      - .:/var/www:ro
 
     # -----------------------------------------------------------------
     # Networks
@@ -37,6 +38,7 @@ services:
     # 1. “app-net” is local to this stack (optional).
     # 2. “proxy” is an **external** network already used by your reverse-proxy.
     networks:
+      - sce-net
       - link0
     ports:
       - "9000:9000"
@@ -45,9 +47,27 @@ services:
     expose:
       - "9000"
 
+  sce-web:
+    image: nginx:1.26-alpine
+    depends_on:
+      - sce-app
+
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - .:/var/www:ro                     # code + /public
+      - storage:/var/www/storage          # same uploads
+
+    expose:
+      - "80"                              # HTTP for NPM
+
+    networks:
+      - sce-net                           # to reach sce:9000
+      - link0                             # external network NPM uses
+
 volumes:
   storage:
 
 networks:
+  sce-net:
   link0:
     external: true
