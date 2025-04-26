@@ -4,7 +4,7 @@ services:
       args:
         user: webhost
         uid: 1002
-      context: ./
+      context: .
       dockerfile: Dockerfile
     image: sce
     container_name: sce
