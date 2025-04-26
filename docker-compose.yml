@@ -1,39 +1,50 @@
 services:
-  web:
+  sce:
+    # Build from the Dockerfile above (Portainer will run `docker build`)
     build:
       context: .
-      dockerfile: ./docker/nginx/Dockerfile
-    restart: unless-stopped
-    volumes:
-      - laravel-storage-production:/var/www/storage:ro
-    networks:
-      - link0
-    ports:
-      - "50002:80"
-    depends_on:
-      php-fpm:
-        condition: service_healthy  # Wait for php-fpm health check
+      dockerfile: Dockerfile
 
-  php-fpm:
-    build:
-      context: .
-      dockerfile: ./docker/php-fpm/Dockerfile
-      target: production
+    # Optionally push image to a registry for reuse
+    # image: ghcr.io/<your-org>/laravel-app:latest
+
     restart: unless-stopped
+
+    # -----------------------------------------------------------------
+    # Environment – adapt to **your existing DB / cache / SMTP** setup
+    # -----------------------------------------------------------------
+    environment:
+      APP_ENV:           production
+      APP_DEBUG:         "false"
+      LOG_CHANNEL:       stderr
+      APP_KEY:           ${APP_KEY:-base64:tncjk6Htau/rVmmx9lc8MMJ8mqjLhOVYqjBaSoyvzwg=}          # supply via Portainer “Env vars” or Secrets
+
+      # Database → point to your external service
+      DB_CONNECTION:     mysql
+      DB_HOST:           ${DB_HOST:-db2.kevinchr.com} # hostname on the shared Docker network
+      DB_PORT:           ${DB_PORT:-3306}
+      DB_DATABASE:       ${DB_DATABASE:-studentcouncilelection}
+      DB_USERNAME:       ${DB_USERNAME:-studentcouncilelection}
+      DB_PASSWORD:       ${DB_PASSWORD:-ACCESS!def00}
+
+    # Persist user uploads, logs, etc.
     volumes:
-      - laravel-storage-production:/var/www/storage  # Mount the storage volume
-    env_file:
-      - .env
+      - storage:/var/www/storage
+
+    # -----------------------------------------------------------------
+    # Networks
+    # -----------------------------------------------------------------
+    # 1. “app-net” is local to this stack (optional).
+    # 2. “proxy” is an **external** network already used by your reverse-proxy.
     networks:
       - link0
-    healthcheck:
-      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+
+    # Expose PHP-FPM for the proxy (ONLY on the internal networks)
+    expose:
+      - "9000"
 
 volumes:
-  laravel-storage-production:
+  storage:
 
 networks:
   link0:
