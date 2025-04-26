@@ -1,19 +1,17 @@
 services:
-  app:
-    build:
-      args:
-        user: 1002
-        uid: 1002
-      context: ./
-      dockerfile: Dockerfile
-    image: sce
-    container_name: sce
-    restart: always
-    working_dir: /var/www/
+  laravel-app:
+    build: .
+    ports:
+      - "50002:50002"
     volumes:
-      - /srv/webhost/studentcouncilelection/www/:/var/www
+      - /srv/webhost/studentcouncilelection/www:/var/www
     networks:
       - link0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:50002/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 networks:
   link0:
