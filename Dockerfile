@@ -32,5 +32,5 @@ COPY --from=frontend /app/public/build public/build
 RUN chown -R www-data:www-data storage bootstrap/cache
 
 USER www-data
-EXPOSE 9000           # fastcgi
+EXPOSE 9000
 CMD ["php-fpm"]
