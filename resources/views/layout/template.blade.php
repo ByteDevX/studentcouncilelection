@@ -237,11 +237,39 @@
             color: white !important;
         }
 
+        .floating-warning {
+    position: fixed;
+    bottom: 24px;
+    left: 10vw;
+    width: 80vw;
+    background: rgba(255, 140, 0, 0.6); /* Orange dengan 60% opacity */
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    z-index: 9999;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.floating-warning strong {
+    font-weight: 700;
+}
         
     </style>
 </head>
 <body>
     <div class = "w-100 bg-image px-5">
+        @if (env('APP_ENV') !== 'production')
+    <div class="floating-warning">
+        <p>
+            Notice: This website is currently operating in a <strong>testing environment</strong> and is not intended for <strong>production use</strong>.
+        </p>
+        <hr style="border: 1px solid white; opacity: 0.5;">
+        <p>
+            Pemberitahuan: Situs web ini saat ini beroperasi dalam <strong>lingkungan pengujian</strong> dan tidak diperuntukkan untuk <strong>penggunaan produksi</strong>.
+        </p>
+    </div>
+@endif
         <nav class="navbar p-2 ps-4" data-aos="fade-up" data-aos-duration="1000">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
