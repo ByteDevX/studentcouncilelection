@@ -6,6 +6,7 @@
 FROM composer:2.8 AS vendor
 WORKDIR /app
 COPY composer.json composer.lock ./
+ENV COMPOSER_MEMORY_LIMIT=-1
 RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
 
 ########################
