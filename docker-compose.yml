@@ -4,7 +4,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/php-fpm/Dockerfile
-      target: production # Use the 'production' stage in the Dockerfile
     restart: unless-stopped
     volumes:
       - /srv/webhost/studentcouncilelection/www/storage:/var/www/storage # Mount the storage volume
