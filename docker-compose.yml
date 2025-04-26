@@ -10,15 +10,15 @@ services:
     container_name: sce
     restart: unless-stopped
     working_dir: /var/www/
-    volumes:
-      - /srv/webhost/studentcouncilelection/www/:/var/www
+    # volumes:
+    #   - /srv/webhost/studentcouncilelection/www/:/var/www
     networks:
       - link0
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:50002/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:50002/health"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 3
 
 networks:
   link0:
