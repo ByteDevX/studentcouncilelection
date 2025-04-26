@@ -257,9 +257,13 @@
         
     </style>
 </head>
+    @php
+    $appEnv = env('APP_ENV');
+    $dbName = env('DB_DATABASE');
+@endphp
 <body>
     <div class = "w-100 bg-image px-5">
-        @if (env('APP_ENV') !== 'production' && env('DB_DATABASE') !== 'sce.prod')
+        @if (!($appEnv === 'production' && $dbName === 'sce.prod'))
     <div class="floating-warning">
         <p>
             <strong>Notice:</strong> This website is currently operating in a <strong>testing environment</strong> and is not intended for <strong>production use</strong>. 
