@@ -242,7 +242,7 @@
     bottom: 24px;
     left: 10vw;
     width: 80vw;
-    background: rgba(255, 140, 0, 0.6); /* Orange dengan 60% opacity */
+    background: rgba(239, 68, 68, 0.6); /* Orange dengan 60% opacity */
     color: white;
     padding: 16px 24px;
     border-radius: 12px;
@@ -262,11 +262,11 @@
         @if (env('APP_ENV') !== 'production')
     <div class="floating-warning">
         <p>
-            Notice: This website is currently operating in a <strong>testing environment</strong> and is not intended for <strong>production use</strong>.
+            <strong>Notice:</strong>strong> This website is currently operating in a <strong>testing environment</strong> and is not intended for <strong>production use</strong>.
         </p>
         <hr style="border: 1px solid white; opacity: 0.5;">
         <p>
-            Pemberitahuan: Situs web ini saat ini beroperasi dalam <strong>lingkungan pengujian</strong> dan tidak diperuntukkan untuk <strong>penggunaan produksi</strong>.
+            <strong>Pemberitahuan:</strong>strong> Situs web ini saat ini beroperasi dalam <strong>lingkungan pengujian</strong> dan tidak diperuntukkan untuk <strong>penggunaan produksi</strong>.
         </p>
     </div>
 @endif
