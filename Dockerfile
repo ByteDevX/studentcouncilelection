@@ -1,8 +1,8 @@
 # Use an official PHP image with Apache
-FROM php:8.1-apache
+FROM php:8.4-apache
 
 # Install system dependencies and PHP extensions
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y sudo \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
