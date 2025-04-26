@@ -3,9 +3,9 @@ FROM php:8.4-cli
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git unzip curl libzip-dev libpng-dev libonig-dev libxml2-dev \
-    gnupg npm nodejs
+    gnupg
 
-# Install Node.js versi 18
+# Install Node.js versi 22
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs
 
@@ -41,4 +41,4 @@ RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 EXPOSE 50002
 
 # Start server + database migrate + seeder di runtime
-CMD php artisan migrate:fresh --seed && php artisan serve --host=0.0.0.0 --port=50002
+CMD php artisan serve --host=0.0.0.0 --port=50002
