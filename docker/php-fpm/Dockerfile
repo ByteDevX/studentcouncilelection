@@ -54,7 +54,7 @@ COPY . /var/www
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist
+RUN composer install --verbose --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist
 
 
 
