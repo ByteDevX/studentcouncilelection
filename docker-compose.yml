@@ -9,7 +9,7 @@ services:
     volumes:
       - /srv/webhost/studentcouncilelection/www/storage:/var/www/storage # Mount the storage volume
     env_file:
-      - .env
+      - stack.env
     networks:
       - link0
     healthcheck:
@@ -31,7 +31,7 @@ services:
     tty: true # Enables an interactive terminal
     stdin_open: true # Keeps standard input open for 'docker exec'
     env_file:
-      - .env
+      - stack.env
     networks:
       - link0
 
