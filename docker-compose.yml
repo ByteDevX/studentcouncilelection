@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      args:
+        user: webhost
+        uid: 1002
+      context: ./
+      dockerfile: Dockerfile
+    image: studentcouncilelection
+    container_name: studentcouncilelection
+    restart: always
+    working_dir: /var/www/
+    volumes:
+      - /srv/webhost/studentcouncilelection/www:/var/www
+    networks:
+      - link0
+
+networks:
+  link0:
+    external: true
