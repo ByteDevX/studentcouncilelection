@@ -3,9 +3,9 @@ FROM php:8.2-cli
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git unzip curl libzip-dev libpng-dev libonig-dev libxml2-dev \
-    npm nodejs gnupg
+    gnupg npm nodejs
 
-# Optionally, install a specific Node.js version (e.g., 18.x)
+# Install Node.js versi 18
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs
 
@@ -27,11 +27,18 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 # Install JS dependencies and build assets
 RUN npm install && npm run build
 
+# Generate application key
+RUN php artisan key:generate
+
+# Fresh migrate database and seed
+RUN php artisan migrate:fresh --seed || true
+# pakai `|| true` biar kalau database belum ready saat build, tidak error. Migrasi ulang di CMD.
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
 # Expose port
 EXPOSE 50002
 
-# Start Laravel development server
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=50002"]
+# Start server + database migrate + seeder di runtime
+CMD php artisan migrate:fresh --seed && php artisan serve --host=0.0.0.0 --port=50002
