@@ -6,7 +6,7 @@ services:
     restart: always
     container_name: sce-app
     environment:
-      APP_ENV:           production
+      APP_ENV:           ${APP_ENV:-production}
       APP_DEBUG:         "false"
       LOG_CHANNEL:       stderr
       APP_KEY:           ${APP_KEY:-base64:tncjk6Htau/rVmmx9lc8MMJ8mqjLhOVYqjBaSoyvzwg=}
