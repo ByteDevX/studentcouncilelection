@@ -28,10 +28,10 @@ class UserController extends Controller
 
             if(!$existingNIM && !$existingEmail){
                 return redirect()->back()->withErrors(['email' => 'Please confirm attendance at the front desk first.']);
-            } else if (!$existingEmail && $existingNIM){
-                 return redirect()->back()->withErrors(['email' => 'Incorrect email.']);
-            } else if (!$existingNIM && $existingEmail){
-                 return redirect()->back()->withErrors(['nim' => 'Incorrect nim.']);
+            // } else if (!$existingEmail && $existingNIM){
+            //      return redirect()->back()->withErrors(['email' => 'Incorrect email.']);
+            // } else if (!$existingNIM && $existingEmail){
+            //      return redirect()->back()->withErrors(['nim' => 'Incorrect nim.']);
             } else {
                 $user = User::where('nim', $validatedData['nim'])->first();
                 if($user){
